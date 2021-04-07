@@ -1,0 +1,70 @@
+<!doctype html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <title>Árbol eneario</title>
+
+    <!--CSS-->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+    <link rel="stylesheet" href="css/style.css">
+
+
+    <!--JS-->
+    <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+</head>
+
+<body>
+    <div class="fluid-container">
+        <nav class="avbar navbar-dark bg-dark navbar-expand-lg">
+            <h1 class="navbar-brand mx-4">Árbol eneario</h1>
+        </nav>
+        <!--FORM-->
+        <div class="card mx-4">
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-4">
+                        <div class="form-group">
+                            <h5 class="card-title">Ingresar palabra</h5>
+                            <label for="wordTxt">Digite una palabra</label>
+                            <input type="text" name="wordTxt" id="wordTxt" class="form-control" value=""
+                                autocomplete="off" required>
+                        </div>
+                        <input type="button"  class="btn btn-primary btn-block" value="Ingresar"
+                            onclick="addWord()">
+                    </div>
+                    <div class="col-4">
+                        <h5 class="card-title">Palabras en el árbol</h5>
+                        <div id="wordsList">
+                            El árbol esta vacío.
+                        </div>
+                        <input type="button"  class="btn btn-danger btn-block" value="Reiniciar"
+                            onclick="reset()">
+                    </div>
+                    <div class="col-4">
+                        <h5 class="card-title">Recorridos</h5>
+                        <p><strong>Preorden:</strong> <span id="preSpan"></span></p>
+                        <p><strong>Inorden:</strong> <span id="inSpan"></span></p>
+                        <p><strong>Posorden:</strong> <span id="posSpan"></span></p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!--ARBOL-->
+        <div class="card mx-4">
+            <div class="card-body">
+                <h5 class="card-title">Árbol generado</h5>
+                <div>
+                    <div class="tree">
+                        <table id="tableTree" class="">
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script src="js/tree.js"></script>
+</body>
+
+</html>
