@@ -24,29 +24,40 @@
         <div class="card mx-4">
             <div class="card-body">
                 <div class="row">
+
+                    <div class="col-8">
+                        <h5 class="card-title">Ingresar palabra</h5>
+                        <div class="row">
+
+                            <div class="col-6">
+                                <div class="form-group">
+                                    <label for="wordTxt">Digite una palabra</label>
+                                    <input type="text" name="wordTxt" id="wordTxt" class="form-control" value=""
+                                        autocomplete="off" required>
+                                </div>
+                                <input type="button" class="btn btn-primary btn-block" value="Ingresar"
+                                    onclick="addWord()">
+                            </div>
+
+                            <div class="col-6">
+                                <div class="form-group">
+                                    <label for="wordTrTxt">Digite la traducción</label>
+                                    <input type="text" name="wordTrTxt" id="wordTrTxt" class="form-control" value=""
+                                        autocomplete="off" required>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
                     <div class="col-4">
                         <div class="form-group">
-                            <h5 class="card-title">Ingresar palabra</h5>
-                            <label for="wordTxt">Digite una palabra</label>
-                            <input type="text" name="wordTxt" id="wordTxt" class="form-control" value=""
-                                autocomplete="off" required>
+                            <h5 class="card-title">Eliminar palabra</h5>
+                            <label for="delSel">Seleccione una palabra</label>
+                            <select name="delSel" id="delSel" class="form-control">
+                                <option value="">--</option>
+                            </select>
                         </div>
-                        <input type="button"  class="btn btn-primary btn-block" value="Ingresar"
-                            onclick="addWord()">
-                    </div>
-                    <div class="col-4">
-                        <h5 class="card-title">Palabras en el árbol</h5>
-                        <div id="wordsList">
-                            El árbol esta vacío.
-                        </div>
-                        <input type="button"  class="btn btn-danger btn-block" value="Reiniciar"
-                            onclick="reset()">
-                    </div>
-                    <div class="col-4">
-                        <h5 class="card-title">Recorridos</h5>
-                        <p><strong>Preorden:</strong> <span id="preSpan"></span></p>
-                        <p><strong>Inorden:</strong> <span id="inSpan"></span></p>
-                        <p><strong>Posorden:</strong> <span id="posSpan"></span></p>
+                        <input type="button" class="btn btn-danger btn-block" value="Eliminar" onclick="delWord()">
                     </div>
                 </div>
             </div>
@@ -59,6 +70,25 @@
                     <div class="tree">
                         <table id="tableTree" class="">
                         </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="card mx-4">
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-6">
+                        <h5 class="card-title">Recorridos</h5>
+                        <p><strong>Preorden:</strong><br><span id="preSpan"></span></p>
+                        <p><strong>Inorden:</strong><br><span id="inSpan"></span></p>
+                        <p><strong>Posorden:</strong><br><span id="posSpan"></span></p>
+                    </div>
+                    <div class="col-6">
+                        <h5 class="card-title">Diccionario</h5>
+                        <div id="wordsList">
+                            El árbol esta vacío.
+                        </div>
+                        <input type="button" class="btn btn-danger btn-block" value="Reiniciar" onclick="reset()">
                     </div>
                 </div>
             </div>

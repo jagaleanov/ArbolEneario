@@ -2,28 +2,30 @@ body {
     background: #888888;
 }
 
-.verticalLine{
+.verticalLine {
     background: url('../img/pixel.gif') repeat-y top center;
     /*background: #f00;*/
 }
 
-.horizontalLine{
+.horizontalLine {
     background: url('../img/pixel.gif') repeat-x center left;
     /*background: #0f0;*/
 }
 
-td{
+td {
     text-align: center;
     min-width: 20px;
     padding: 0;
     margin: 0;
     border: 0;
+    display: table-cell !important;
 }
-.node{
+
+.node {
     font-weight: bold;
     font-size: 1.3em;
     display: inline-block;
-    border: 1px solid #000;
+    /*border: 1px solid #000;*/
     background: #007bff;
-    color: #fff; 
+    color: #fff;
 }

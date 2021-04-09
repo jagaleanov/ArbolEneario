@@ -6,14 +6,18 @@ class Node {
     type;
     right;
     down;
+    wordTr;
 
 
-    constructor(value) {
+    constructor(value, wordTr = '') {
         this.value = value;
         this.parent = null;
         this.type = null;
         this.right = null;
         this.down = null;
+        this.wordTr = wordTr;
+
+
     }
 }
 
@@ -26,6 +30,7 @@ class Tree {
     preOrder = '';
     inOrder = '';
     posOrder = '';
+    wordTr;
 
     constructor() {
 
@@ -36,6 +41,7 @@ class Tree {
         this.wordsList = [];
         this.treeToMatrix(this.head);
         this.completeMatrix();
+        this.wordTr = '';
 
     }
 
@@ -44,9 +50,9 @@ class Tree {
         if (head != null) {
 
             if (head.value == '}' || head.value.charCodeAt(0) > char.charCodeAt(0)) {
-                let newNode = new Node(char);
+                let newNode = new Node(char, this.wordTr);
                 head.parent = newNode;
-                head.type = 'right';
+                head.type = 1;
                 newNode.right = head;
                 return newNode;
 
@@ -55,20 +61,19 @@ class Tree {
                 while (node.right != null && node.right.value.charCodeAt(0) < char.charCodeAt(0)) {
                     node = node.right;
                 }
-                let newNode = new Node(char);
-
+                let newNode = new Node(char, this.wordTr);
                 if (newNode.right != null) {
                     node.right.parent = newNode;
-                    node.right.type = 'right';
+                    node.right.type = 1;
                 }
                 newNode.right = node.right;
                 node.right = newNode;
                 newNode.parent = node;
-                newNode.type = 'right';
+                newNode.type = 1;
                 return head;
             }
         } else {
-            return new Node(char);
+            return new Node(char, this.wordTr);
         }
     }
 
@@ -76,13 +81,13 @@ class Tree {
         if (word.length == 0) {//si acabo la palabra
             head.down = this.addRight(head.down, '}');
             head.down.parent = head;
-            head.down.type = 'down';
+            head.down.type = 0;
         } else {
             let node = head.down;
             if (node == null) {//si no hay mas letras debajo
                 head.down = this.addRight(null, word.charAt(0));
                 head.down.parent = head;
-                head.down.type = 'down';
+                head.down.type = 0;
                 head = this.addWordRecursive(head, word);
             } else if (node.value == word.charAt(0)) {//si la letra de abajo coincide
                 node = this.addWordRecursive(node, word.substring(1));
@@ -94,11 +99,11 @@ class Tree {
                 if (node.right != null) {
                     node.right = this.addWordRecursive(node.right, word.substring(1));
                     node.right.parent = node;
-                    node.right.type = 'right';
+                    node.right.type = 1;
                 } else {
                     head.down = this.addRight(head.down, word.charAt(0));
                     head.down.parent = head;
-                    head.down.type = 'down';
+                    head.down.type = 0;
                     head = this.addWordRecursive(head, word);
                 }
             }
@@ -107,14 +112,16 @@ class Tree {
         return head;
     }
 
-    addWord(word) {
+    addWord(word, wordTr) {
         if (!this.wordsList.includes(word)) {
+            this.wordTr = wordTr;
             this.head = this.addWordRecursive(this.head, word);
             this.tableData = [[]];
             this.lineCounter = 0;
             this.treeToMatrix(this.head);
             this.completeMatrix();
             this.wordsList.push(word);
+            this.wordsList.sort();
             this.preOrder = '';
             this.setPreOrder(this.head);
             this.inOrder = '';
@@ -126,32 +133,126 @@ class Tree {
         }
     }
 
+    //DEL WORD
+    delWordRecursive(head, word) {
+        if (word.length == 0) {
+            return [head, true];
+        } else if (head.value == null) {
+            let res = this.delWordRecursive(head.down, word);
+            if (res[1]) {
+                if (head.down != null) {
+                    head.down = head.down.right;
+                    if (head.down != null) {
+                        head.down.parent = head;
+                        head.down.type = 0;
+                    }
+                }
+                return [head, true];
+
+            } else {
+                head.down = res[0];
+                return [head, false];
+            }
+        } else if (head.value == word.charAt(0)) {
+            let res = this.delWordRecursive(head.down, word.substring(1));
+            if (res[1]) {
+                if (head.down != null) {
+                    head.down = head.down.right;
+                    if (head.down != null) {
+                        head.down.parent = head;
+                        head.down.type = 0;
+                        return [head, false];
+                    } else {
+                        return [head, true];
+
+                    }
+                } else {
+                    return [head, true];
+                }
+
+            } else {
+                head.down = res[0];
+                return [head, false];
+            }
+
+        } else {
+            let res = this.delWordRecursive(head.right, word);
+            head.right = res[0];
+
+            if (res[1]) {
+                head.right = head.right.right;
+
+                if (head.right != null) {
+                    head.right.parent = head;
+                }
+                return [head, false];
+
+            } else {
+                head.right = res[0];
+                return [head, false];
+            }
+        }
+    }
+
+    delWord(word) {
+        let res = this.delWordRecursive(this.head, word + '}');
+        this.head = res[0];
+        this.tableData = [[]];
+        this.lineCounter = 0;
+        this.treeToMatrix(this.head);
+        this.completeMatrix();
+        let temp = [];
+        for (let i = 0; i < this.wordsList.length; i++) {
+            if (this.wordsList[i] != word) {
+                temp.push(this.wordsList[i]);
+            }
+        }
+        this.wordsList = temp;
+        this.preOrder = '';
+        this.setPreOrder(this.head);
+        this.inOrder = '';
+        this.setInOrder(this.head);
+        this.posOrder = '';
+        this.setPosOrder(this.head);
+    }
+
     //CREATE HTML
-    setChar(char, charCounter, dir) {
+    setChar(node, charCounter, dir) {
+        let data = {};
+        data.value = null;
         while (this.tableData[this.lineCounter].length - 1 < charCounter * 2) {
-            this.tableData[this.lineCounter].push('');
+            this.tableData[this.lineCounter].push(data);
         }
 
-        if (dir == 'right') {
+        if (dir == 1) {
             let lineFrom = null;
             for (let i = 1; i < this.lineCounter; i++) {
                 while (this.tableData[i].length - 1 < charCounter * 2) {
-                    this.tableData[i].push('');
+                    this.tableData[i].push({ data });
                 }
-                if (this.tableData[i][charCounter * 2] != '') {
+                if (this.tableData[i][charCounter * 2].value != null) {
                     lineFrom = i;
                 }
             }
 
             for (let i = lineFrom + 1; i < this.lineCounter; i++) {
-                this.tableData[i][charCounter * 2] = '--';
+                data = {};
+                data.value = '--';
+                this.tableData[i][charCounter * 2] = data;
             }
 
-        } else if (dir == 'down') {
-            this.tableData[this.lineCounter][(charCounter * 2) - 1] = '||';
+        } else if (dir == 0) {
+
+            let data = {};
+            data.value = '||';
+            this.tableData[this.lineCounter][(charCounter * 2) - 1] = data;
         }
 
-        this.tableData[this.lineCounter][charCounter * 2] = char;
+        data = {};
+        data.value = (node.value == null ? '?' : node.value);
+        data.wordTr = node.wordTr;
+
+        this.tableData[this.lineCounter][charCounter * 2] = data;
     }
 
     addLine() {
@@ -162,21 +263,21 @@ class Tree {
         this.lineCounter++;
     }
 
-    treeToMatrix(head, charCounter = 0, dir = 'head') {
+    treeToMatrix(head, charCounter = 0, dir = null) {
 
         if (head.value == null) {
             this.tableData.push([]);
         }
-
-        this.setChar((head.value == null ? '?' : head.value), charCounter, dir);
+        //
+        this.setChar(head, charCounter, dir);
 
         if (head.down != null) {
-            this.treeToMatrix(head.down, charCounter + 1, 'down');
+            this.treeToMatrix(head.down, charCounter + 1, 0);
         }
 
         if (head.right != null) {
             this.addLine();
-            this.treeToMatrix(head.right, charCounter, 'right');
+            this.treeToMatrix(head.right, charCounter, 1);
         }
 
     }
@@ -192,7 +293,9 @@ class Tree {
 
         for (let i = 0; i < this.tableData.length; i++) {
             while (this.tableData[i].length < counter) {
-                this.tableData[i].push('');
+                let data = {};
+                data.value = null;
+                this.tableData[i].push(data);
             }
         }
 
@@ -201,17 +304,17 @@ class Tree {
 
     getMatrixHTML() {
         let html = '';
-
+        let data = {};
         for (let i = 0; i < this.tableData[0].length; i++) {
             html += '<tr>';
             for (let j = 0; j < this.tableData.length; j++) {
 
-                if (this.tableData[j][i] == '||') {
+                if (this.tableData[j][i].value == '||') {
                     html += '<td class="verticalLine">&nbsp;</td>';
-                } else if (this.tableData[j][i] == '--') {
+                } else if (this.tableData[j][i].value == '--') {
                     html += '<td class="horizontalLine">&nbsp;</td>';
-                } else if (this.tableData[j][i] != '') {
-                    html += '<td class="node badge badge-pill badge-primary">' + this.tableData[j][i] + '</td>';
+                } else if (this.tableData[j][i].value != null) {
+                    html += '<td class="node badge badge-pill badge-primary">' + this.tableData[j][i].value + (this.tableData[j][i].value == '}' ? '<br>' + this.tableData[j][i].wordTr : '') + '</td>';
                 } else {
                     html += '<td class="empty">&nbsp;</td>';
                 }
@@ -270,7 +373,7 @@ class Tree {
     }
     setPosOrder(head) {
         if (head != null) {
-            
+
             this.setPosOrder(head.down);
 
             let temp = head.down;
@@ -283,27 +386,31 @@ class Tree {
             this.posOrder += (head.value == null ? '?' : head.value);
         }
     }
-        //RESTART
-        restart() {
-            this.tableData = [[]];
-            this.lineCounter = 0;
-            this.wordsList = [];
-            this.head = new Node(null);
-            this.head.down = new Node('}');
-            this.treeToMatrix(this.head);
-            this.completeMatrix();
-        }
+    //RESTART
+    restart() {
+        this.tableData = [[]];
+        this.lineCounter = 0;
+        this.wordsList = [];
+        this.head = new Node(null);
+        this.head.down = new Node('}');
+        this.treeToMatrix(this.head);
+        this.completeMatrix();
     }
+}
 
 let tree = new Tree();
 $('#tableTree').html(tree.getMatrixHTML());
 $('#wordTxt').focus();
 
+
+
+
 function addWord() {
-    if ($('#wordTxt').val().length > 0) {
-        tree.addWord($('#wordTxt').val());
+    if ($('#wordTxt').val().length > 0 && $('#wordTrTxt').val().length > 0) {
+        tree.addWord($('#wordTxt').val(), $('#wordTrTxt').val());
         $('#tableTree').html(tree.getMatrixHTML());
         $('#wordsList').html(tree.getListHTML());
+        selectList();
         $('#preSpan').html(tree.preOrder);
         $('#inSpan').html(tree.inOrder);
         $('#posSpan').html(tree.posOrder);
@@ -313,7 +420,30 @@ function addWord() {
     }
 
     $('#wordTxt').val('');
+    $('#wordTrTxt').val('');
     $('#wordTxt').focus();
+}
+
+function selectList() {
+    $('#delSel').empty();
+    $('#delSel').append('<option value="" >--</option>');
+    for (let i = 0; i < tree.wordsList.length; i++) {
+        $('#delSel').append('<option value="' + tree.wordsList[i] + '" >' + tree.wordsList[i] + '</option>');
+        //$('#delSel').append($("<option></option>")).attr("value", tree.wordsList[i]).text(tree.wordsList[i]);
+
+    }
+}
+
+function delWord() {
+    if (confirm("Desea eliminar la palabra " + $('#delSel').val())) {
+        tree.delWord($('#delSel').val());
+        $('#tableTree').html(tree.getMatrixHTML());
+        $('#wordsList').html(tree.getListHTML());
+        selectList();
+        $('#preSpan').html(tree.preOrder);
+        $('#inSpan').html(tree.inOrder);
+        $('#posSpan').html(tree.posOrder);
+    }
 }
 
 function reset() {
@@ -321,6 +451,7 @@ function reset() {
         tree.restart();
         $('#tableTree').html(tree.getMatrixHTML());
         $('#wordsList').html('');
+        selectList();
         $('#wordTxt').val('');
         $('#wordTxt').focus();
     }
