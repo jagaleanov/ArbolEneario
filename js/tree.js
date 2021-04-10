@@ -414,13 +414,13 @@ function addWord() {
         $('#preSpan').html(tree.preOrder);
         $('#inSpan').html(tree.inOrder);
         $('#posSpan').html(tree.posOrder);
+        $('#wordTxt').val('');
+        $('#wordTrTxt').val('');
 
     } else {
-        alert('ingrese una palabra válida');
+        alert('ingrese una palabra y su traducción');
     }
 
-    $('#wordTxt').val('');
-    $('#wordTrTxt').val('');
     $('#wordTxt').focus();
 }
 
