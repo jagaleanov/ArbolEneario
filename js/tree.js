@@ -314,7 +314,7 @@ class Tree {
                 } else if (this.tableData[j][i].value == '--') {
                     html += '<td class="horizontalLine">&nbsp;</td>';
                 } else if (this.tableData[j][i].value == '}') {
-                    html += '<td><div class="node node_key"><strong>' + this.tableData[j][i].value +  '</strong> ' + this.tableData[j][i].wordTr + '</div></td>';
+                    html += '<td><div class="node node_key"><strong>' + this.tableData[j][i].value +  '</strong>' + this.tableData[j][i].wordTr + '</div></td>';
                 } else if (this.tableData[j][i].value != null) {
                     html += '<td><div class="node"><strong>' + this.tableData[j][i].value + '</strong></div></td>';
                 } else {
@@ -388,6 +388,7 @@ class Tree {
             this.posOrder += (head.value == null ? '?' : head.value);
         }
     }
+    
     //RESTART
     restart() {
         this.tableData = [[]];
