@@ -13,19 +13,18 @@ body {
 }
 
 td {
+    font-size: 0.9em;
     text-align: center;
     min-width: 20px;
     padding: 0;
     margin: 0;
     border: 0;
-    display: table-cell !important;
+    display: table-cell;
 }
 
 .node {
-    font-weight: bold;
-    font-size: 1.3em;
-    display: inline-block;
-    /*border: 1px solid #000;*/
-    background: #007bff;
-    color: #fff;
+    font-size: 1.1em;
+}
+.node_key {
+    font-size: 1em;
 }

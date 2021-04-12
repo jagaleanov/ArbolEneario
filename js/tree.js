@@ -313,8 +313,10 @@ class Tree {
                     html += '<td class="verticalLine">&nbsp;</td>';
                 } else if (this.tableData[j][i].value == '--') {
                     html += '<td class="horizontalLine">&nbsp;</td>';
+                } else if (this.tableData[j][i].value == '}') {
+                    html += '<td><div class="node node_key"><strong>' + this.tableData[j][i].value +  '</strong> ' + this.tableData[j][i].wordTr + '</div></td>';
                 } else if (this.tableData[j][i].value != null) {
-                    html += '<td class="node badge badge-pill badge-primary">' + this.tableData[j][i].value + (this.tableData[j][i].value == '}' ? '<br>' + this.tableData[j][i].wordTr : '') + '</td>';
+                    html += '<td><div class="node"><strong>' + this.tableData[j][i].value + '</strong></div></td>';
                 } else {
                     html += '<td class="empty">&nbsp;</td>';
                 }
